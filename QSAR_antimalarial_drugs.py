@@ -11,7 +11,7 @@
 #get_ipython().run_line_magic('autoreload', '2')
 #get_ipython().run_line_magic('matplotlib', 'inline')
 
-# remove warnings
+# Remove warnings
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -47,12 +47,22 @@ from sklearn.feature_selection import SelectFromModel, SelectPercentile, f_class
 
 # Define few global variables (name of class column, the seed for random generator):
 outVar = 'Class'
-seed = 42 # To ensure that it is always the same split
+seed = 42  # To ensure that it is always the same split
 np.random.seed(seed)
 
 # Read dataset from datasets folder as CSV:
 sFile = './datasets/ds.'+str(outVar)+'.csv'
 print('\n-> Read dataset', sFile)
-df = pd.read_csv(sFile) # To read as DataFrame (data and header)
-print('* Columns:',list(df.columns)) # Print the names of the columns to verify
+df = pd.read_csv(sFile)  # To read as DataFrame (data and header)
+print('* Columns:',list(df.columns))  # Print the names of the columns to verify
 print('* Dimension:', df.shape)
+
+# Split dataset into 80% train and 20% test subsets using class stratification:
+X_data = df.drop(outVar, axis=1).values  # Remove the output and we are left with the columns of features (array)
+Y_data = df[outVar].values 
+X_tr, X_ts, y_tr, y_ts = train_test_split(X_data, Y_data,
+                                          random_state=seed, test_size=0.20,
+                                          stratify=Y_data)  # To take into account the proportion of classes in each split
+print("Dimensions for splits:\n", 'X_tr.shape =', X_tr.shape, 'X_ts.shape =', X_ts.shape,
+      'y_tr.shape =', y_tr.shape, 'y_ts.shape =', y_ts.shape)
+
