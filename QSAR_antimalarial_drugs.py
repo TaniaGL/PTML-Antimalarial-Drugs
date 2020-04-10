@@ -2,9 +2,16 @@
 # coding: utf-8
 
 # # QSAR for anti-malaria drugs
-# 
-# Dataset was obtained from Chembl database. The project will search for the best QSAR models as a relationship between the input features and the output class (anti-malaria or not). The model input features are obtained as moving averages (MAs) of the original Chembl drug features in specific experimental conditions. The current dataset has already the final MA descriptors. The dataset was cleaned for duplicate rows and the rows where shuffled.
-# 
+ 
+'''Dataset was obtained from Chembl database. 
+The project will search for the best QSAR models as a relationship 
+between the input features and the output class (anti-malaria or not). 
+The model input features are obtained as moving averages (MAs) 
+of the original Chembl drug features in specific experimental conditions. 
+The current dataset has already the final MA descriptors. 
+The dataset was cleaned for duplicate rows and the rows where shuffled.'''
+
+
 # Input specific libraries for the calculations:
 
 #get_ipython().run_line_magic('reload_ext', 'autoreload')
@@ -65,4 +72,39 @@ X_tr, X_ts, y_tr, y_ts = train_test_split(X_data, Y_data,
                                           stratify=Y_data)  # To take into account the proportion of classes in each split
 print("Dimensions for splits:\n", 'X_tr.shape =', X_tr.shape, 'X_ts.shape =', X_ts.shape,
       'y_tr.shape =', y_tr.shape, 'y_ts.shape =', y_ts.shape)
+
+# Normalize dataset with values between 0 and 1:
+'''Because the probability feature is already between 0 and 1, we used the same normalization range for all the features. 
+The normalization used only the training values and it was applied to the test subset.'''
+scaler = MinMaxScaler()
+X_tr_norm = scaler.fit_transform(X_tr)
+X_ts_norm = scaler.transform(X_ts)
+
+# Save train subset as file:
+df_tr_norm = pd.DataFrame(X_tr_norm, columns = list(df.columns)[:-1])
+df_tr_norm['Class'] = y_tr
+df_tr_norm.shape
+df_tr_norm.to_csv(r'datasets\ds.Class.tr.norm.csv',index=False)  # Have to change the route. Index false to doesn't put an index column.
+
+# Save test subset as file:
+df_ts_norm = pd.DataFrame(X_ts_norm, columns = list(df.columns)[:-1])
+df_ts_norm['Class'] = y_ts
+df_ts_norm.shape
+df_ts_norm.to_csv(r'datasets\ds.Class.ts.norm.csv',index=False)
+
+
+# ### ML with training and test subsets
+# 
+# Read train and test subsets as dataframes:
+df_tr_norm = pd.read_csv(r'datasets\ds.Class.tr.norm.csv')
+df_ts_norm = pd.read_csv(r'datasets\ds.Class.ts.norm.csv')
+print('Training shape:',df_tr_norm.shape)
+print('Test shape:',df_ts_norm.shape)
+
+# Get data only:
+X_tr_norm = df_tr_norm.drop(outVar, axis=1).values
+y_tr_norm = df_tr_norm[outVar].values
+X_ts_norm = df_ts_norm.drop(outVar, axis=1).values
+y_ts_norm = df_ts_norm[outVar].values
+
 
