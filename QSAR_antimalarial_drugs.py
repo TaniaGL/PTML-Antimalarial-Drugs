@@ -107,4 +107,32 @@ y_tr_norm = df_tr_norm[outVar].values
 X_ts_norm = df_ts_norm.drop(outVar, axis=1).values
 y_ts_norm = df_ts_norm[outVar].values
 
-
+# Define a function for ML with a single method and statistics 
+# such as ACC, AUROC, precision, recall, f1score:
+def ML_baseline(cls, X_tr, y_tr, X_ts, y_ts, seed=42, classes=['0','1']):
+    ACC = 0
+    AUROC = 0
+    precision = 0 
+    recall = 0
+    f1score = 0
+    
+    cls_name = type(cls).__name__
+    
+    start_time = time.time()
+    cls.fit(X_tr, y_tr)
+    print('>', cls_name, "training: %0.2f mins " % ((time.time() - start_time)/60))
+    
+    # predictions
+    y_pred  = cls.predict(X_ts)
+    y_probs = cls.predict_proba(X_ts)[:, 1]
+    cls_rep = classification_report(y_ts, y_pred, target_names=classes,
+                                    output_dict=True, digits=3)
+    print(cls_rep)
+    
+    ACC       = accuracy_score(y_ts, y_pred)
+    AUROC     = roc_auc_score(y_ts, y_probs)
+    precision = cls_rep['weighted avg']['precision']
+    recall    = cls_rep['weighted avg']['recall']
+    f1score   = cls_rep['weighted avg']['f1-score']  
+    
+    return ACC, AUROC, precision, recall, f1score
