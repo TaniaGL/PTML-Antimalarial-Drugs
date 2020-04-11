@@ -107,6 +107,7 @@ y_tr_norm = df_tr_norm[outVar].values
 X_ts_norm = df_ts_norm.drop(outVar, axis=1).values
 y_ts_norm = df_ts_norm[outVar].values
 
+
 # Define a function for ML with a single method and statistics 
 # such as ACC, AUROC, precision, recall, f1score:
 def ML_baseline(cls, X_tr, y_tr, X_ts, y_ts, seed=42, classes=['0','1']):
@@ -136,3 +137,17 @@ def ML_baseline(cls, X_tr, y_tr, X_ts, y_ts, seed=42, classes=['0','1']):
     f1score   = cls_rep['weighted avg']['f1-score']  
     
     return ACC, AUROC, precision, recall, f1score
+
+# Define a function to return a dictionary with the class ballance:
+def  set_weights(y_data, option='balanced'):
+    """Estimate class weights for umbalanced dataset
+       If ‘balanced’, class weights will be given by n_samples / (n_classes * np.bincount(y)). 
+       If a dictionary is given, keys are classes and values are corresponding class weights. 
+       If None is given, the class weights will be uniform """
+    cw = class_weight.compute_class_weight(option, np.unique(y_data), y_data)
+    w = {i:j for i,j in zip(np.unique(y_data), cw)}
+    return w
+
+class_weights = set_weights(list(y_tr_norm), option='balanced')
+print('* Class ballance in training set:', class_weights)
+
