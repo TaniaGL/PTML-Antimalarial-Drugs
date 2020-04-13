@@ -84,20 +84,20 @@ X_ts_norm = scaler.transform(X_ts)
 df_tr_norm = pd.DataFrame(X_tr_norm, columns = list(df.columns)[:-1])
 df_tr_norm['Class'] = y_tr
 df_tr_norm.shape
-df_tr_norm.to_csv(r'datasets\ds.Class.tr.norm.csv',index=False)  # Have to change the route. Index false to doesn't put an index column.
+df_tr_norm.to_csv(r'datasets/ds.Class.tr.norm.csv',index=False)  # Have to change the route. Index false to doesn't put an index column.
 
 # Save test subset as file:
 df_ts_norm = pd.DataFrame(X_ts_norm, columns = list(df.columns)[:-1])
 df_ts_norm['Class'] = y_ts
 df_ts_norm.shape
-df_ts_norm.to_csv(r'datasets\ds.Class.ts.norm.csv',index=False)
+df_ts_norm.to_csv(r'datasets/ds.Class.ts.norm.csv',index=False)
 
 
 # ### ML with training and test subsets
 # 
 # Read train and test subsets as dataframes:
-df_tr_norm = pd.read_csv(r'datasets\ds.Class.tr.norm.csv')
-df_ts_norm = pd.read_csv(r'datasets\ds.Class.ts.norm.csv')
+df_tr_norm = pd.read_csv(r'datasets/ds.Class.tr.norm.csv')
+df_ts_norm = pd.read_csv(r'datasets/ds.Class.ts.norm.csv')
 print('Training shape:',df_tr_norm.shape)
 print('Test shape:',df_ts_norm.shape)
 
@@ -170,3 +170,23 @@ classifiers = [GaussianNB(),
                #AdaBoostClassifier(random_state = seed), 
                #BaggingClassifier(random_state=seed)
               ]
+
+
+# Create a dataframe for the results with all ML statistics:
+df_ML = pd.DataFrame(columns=['Method', 'ACC','AUROC' ,'precision' ,'recall' ,'f1-score' ])
+
+# Fit each classifier:
+for cls in classifiers:
+    print("\n***", cls)
+    ACC,AUROC,precision,recall,f1score=ML_baseline(cls, X_tr_norm, y_tr_norm, X_ts_norm, y_ts_norm, seed=seed)
+    df_ML = df_ML.append({'Method': str(type(cls).__name__),
+                          'ACC': float(ACC),
+                          'AUROC': float(AUROC),
+                          'precision': float(precision),
+                          'recall': float(recall),
+                          'f1-score': float(f1score)}, ignore_index=True)
+
+df_ML
+
+# Save the results as CSV file:
+df_ML.to_csv(r'results/ML_statistics.csv')
