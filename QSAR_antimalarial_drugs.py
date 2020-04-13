@@ -151,3 +151,22 @@ def  set_weights(y_data, option='balanced'):
 class_weights = set_weights(list(y_tr_norm), option='balanced')
 print('* Class ballance in training set:', class_weights)
 
+
+# Define the list of classifiers for our ML baseline:
+# priors for LDA
+priors = [(class_weights[0]/(class_weights[0]+class_weights[1])), 
+          (class_weights[1]/(class_weights[0]+class_weights[1]))]
+    
+classifiers = [GaussianNB(),
+               KNeighborsClassifier(n_jobs=-1, n_neighbors=3), # n_jobs = -1 uses all cores, for n core(s) = n
+               #LinearDiscriminantAnalysis(solver='svd',priors=priors), # No tiene random_state
+               #SVC(kernel="linear",random_state=seed,gamma='scale',class_weight=class_weights),
+               #SVC(kernel = 'rbf', random_state=seed,gamma='scale',class_weight=class_weights),
+               #LogisticRegression(solver='lbfgs',random_state=seed,class_weight=class_weights), 
+               #MLPClassifier(hidden_layer_sizes= (20), random_state = seed, max_iter=50000, shuffle=False), # Neurons should be at least 25 (number of items we work with)
+               DecisionTreeClassifier(random_state = seed,class_weight=class_weights), # Only 1 tree
+               RandomForestClassifier(n_estimators=100,n_jobs=-1,random_state=seed,class_weight=class_weights), 
+               #GradientBoostingClassifier(random_state=seed), 
+               #AdaBoostClassifier(random_state = seed), 
+               #BaggingClassifier(random_state=seed)
+              ]
