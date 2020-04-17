@@ -58,7 +58,7 @@ seed = 42  # To ensure that it is always the same split
 np.random.seed(seed)
 
 # Read dataset from datasets folder as CSV:
-sFile = './datasets/ds.'+str(outVar)+'.csv'
+sFile = '.\datasets\ds.'+str(outVar)+'.csv'
 print('\n-> Read dataset', sFile)
 df = pd.read_csv(sFile)  # To read as DataFrame (data and header)
 print('* Columns:',list(df.columns))  # Print the names of the columns to verify
@@ -84,20 +84,20 @@ X_ts_norm = scaler.transform(X_ts)
 df_tr_norm = pd.DataFrame(X_tr_norm, columns = list(df.columns)[:-1])
 df_tr_norm['Class'] = y_tr
 df_tr_norm.shape
-df_tr_norm.to_csv(r'datasets/ds.Class.tr.norm.csv',index=False)  # Have to change the route. Index false to doesn't put an index column.
+df_tr_norm.to_csv(r'datasets\ds.Class.tr.norm.csv',index=False)  # Have to change the route. Index false to doesn't put an index column.
 
 # Save test subset as file:
 df_ts_norm = pd.DataFrame(X_ts_norm, columns = list(df.columns)[:-1])
 df_ts_norm['Class'] = y_ts
 df_ts_norm.shape
-df_ts_norm.to_csv(r'datasets/ds.Class.ts.norm.csv',index=False)
+df_ts_norm.to_csv(r'datasets\ds.Class.ts.norm.csv',index=False)
 
 
 # ### ML with training and test subsets
 # 
 # Read train and test subsets as dataframes:
-df_tr_norm = pd.read_csv(r'datasets/ds.Class.tr.norm.csv')
-df_ts_norm = pd.read_csv(r'datasets/ds.Class.ts.norm.csv')
+df_tr_norm = pd.read_csv(r'datasets\ds.Class.tr.norm.csv')
+df_ts_norm = pd.read_csv(r'datasets\ds.Class.ts.norm.csv')
 print('Training shape:',df_tr_norm.shape)
 print('Test shape:',df_ts_norm.shape)
 
