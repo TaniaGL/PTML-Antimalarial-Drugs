@@ -28,7 +28,7 @@ import pandas as pd
 import time
 import matplotlib.pyplot as plt
 
-from sklearn.pipeline import Pipeline # Más automático
+from sklearn.pipeline import Pipeline
 from sklearn.model_selection import cross_val_score, GridSearchCV, StratifiedKFold, train_test_split
 from sklearn.metrics import accuracy_score, roc_auc_score,f1_score, recall_score, precision_score
 from sklearn.metrics import confusion_matrix, classification_report
