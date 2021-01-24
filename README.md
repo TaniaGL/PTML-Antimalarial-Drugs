@@ -1,4 +1,4 @@
-# Prediction models for antimalarial activity of drugs using Perturbation Theory and Machine Learning
+## Prediction models for antimalarial activity of drugs using Perturbation Theory and Machine Learning
 
 
 
